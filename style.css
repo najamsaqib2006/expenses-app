@@ -112,7 +112,7 @@ button:hover {
 #report { background: #c8e6c9; color: #1b5e20; font-weight: bold; }
 
 /* Mobile Responsiveness */
-@media (max-width: 480px) {
+@media (max-width: 450px) {
   body {
     padding: 5px;
   }
@@ -123,3 +123,4 @@ button:hover {
     font-size: 1rem;
   }
 }
+
