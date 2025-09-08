@@ -1,0 +1,125 @@
+body{
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin-top: 0%;
+    padding:20px;
+    background-color: linear-gradient(135deg, #4facfe, #00f2fe);
+    color: #333;
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px;
+}
+.card{
+    background-color: whitesmoke;
+    border-radius: 12px;
+    padding: 20px auto 0;
+    margin: 15px auto 0;
+    width: 100%;
+    max-width: 400px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);font-size: 15px;
+    animation: fadeIn 0.5s ease-in-out; transition: cubic-bezier();
+}
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+h3{
+    margin-top: 10px;
+    font-size: larger;
+    text-align: center;
+    color: #444;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 5px;
+}
+/* Input fields*/
+input, select{
+    width: 90%;
+    padding: 5px;
+    margin: 10px 0 0 0 ;
+    border: 2px solid #4facfe;
+    border-radius: 18px;
+    font-size: 15px;
+    transition: cubic-bezier();
+}
+input:focus, select:focus{
+    border-color: #4facfe;
+    outline: none;
+    box-shadow: 0 0 5px rgba(79, 172, 254, 0.5);
+}
+/* Button */
+button {
+  width: 50%;
+  padding: 12px;
+  margin: 10px 100px;
+  border: none;
+  border-radius: 15px;
+  background: linear-gradient(135deg, #2d6bf0, #c429d8);
+  color: white;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: transform 0.2s, background 0.3s;
+  justify-content: center;
+}
+
+button:hover {
+  transform: translateY(-2px);
+  background: linear-gradient(135deg, #36d98c, #26e6c4);
+}
+
+/* Transaction List */
+.transaction ul {
+  list-style: none;
+  padding: 0;
+}
+
+.transaction li {
+  padding: 12px;
+  margin: 8px 0;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.transaction li.expense {
+  background: #ffe0e0;
+  color: #d32f2f;
+  margin: 0 10px 0;
+}
+
+.transaction li.income {
+  background: #e0ffe4;
+  color: #2e7d32;
+  margin: 0 10px 0;
+}
+
+/* Reports Section */
+.reports p {
+  font-size: 16px;
+  padding: 10px;
+  margin: 6px 0;
+  border-radius: 8px;
+  background: #f5f5f5;
+}
+
+#monthly-report { background: #d0eaff; color: #0277bd; }
+#quarterly-report { background: #fff2cc; color: #f57f17; }
+#annual-report { background: #e1bee7; color: #6a1b9a; }
+#report { background: #c8e6c9; color: #1b5e20; font-weight: bold; }
+
+/* Mobile Responsiveness */
+@media (max-width: 480px) {
+  body {
+    padding: 5px;
+  }
+  .card {
+    padding: 15px;
+  }
+  h3 {
+    font-size: 1rem;
+  }
+}
