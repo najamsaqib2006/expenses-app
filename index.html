@@ -7,6 +7,8 @@
     <link rel="stylesheet" href="style.css">
     <link rel="icon" href="pic.png" type="image/png">
     <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#4CAF50">
+
 </head>
 
 <body>
@@ -27,7 +29,15 @@
     <div class="card">
         <section class="transaction">
             <h3>Transaction List</h3>
-            <ul id="transactionList"></ul>
+            <ul id="transactionList">
+                <li class="expense">
+                    <span>08-09-25 - grocery : -100 PKR</span>
+                    <div class="btn-group">
+                        <button class="edit-btn">✏️</button>
+                        <button class="delete-btn">❌</button>
+                    </div>
+                </li>
+            </ul>
         </section>
         <section class="reports">
             <p id="monthly-report">Monthly: 0 PKR</p>
@@ -46,5 +56,4 @@
     </div>
 <script src="app.js"></script>
 </body>
-
 </html>

@@ -10,77 +10,123 @@ const transactionList = document.getElementById("transactionList");
 const monthlyReport = document.getElementById("monthly-report");
 const quarterlyReport = document.getElementById("quarterly-report");
 const annualReport = document.getElementById("annual-report");
-const dateReport = document.getElementById("report");
 
 const startDateInput = document.getElementById("start-date");
 const endDateInput = document.getElementById("end-date");
+const reportOutput = document.getElementById("report");
 
-// ====== Local Storage ======
+// Transactions array (load from localStorage if available)
 let transactions = JSON.parse(localStorage.getItem("transactions")) || [];
 
-// ====== Add Transaction ======
+// ====== Functions ======
+
+// Save to localStorage
+function saveTransactions() {
+    localStorage.setItem("transactions", JSON.stringify(transactions));
+}
+
+// Render all transactions
+function renderTransactions() {
+  transactionList.innerHTML = "";
+  transactions.forEach((txn, index) => {
+    // create li and classes
+    const li = document.createElement("li");
+    li.className = txn.type === "income" ? "income" : "expense";
+
+    // text span (flex child)
+    const textSpan = document.createElement("span");
+    textSpan.className = "txn-text";
+    textSpan.textContent = `${txn.date} - ${txn.desc}: ${txn.type === "income" ? "+" : "-"}${txn.amount} PKR`;
+
+    // button group (flex child, pushed right by margin-left:auto)
+    const btnGroup = document.createElement("div");
+    btnGroup.className = "btn-group";
+
+    const editBtn = document.createElement("button");
+    editBtn.className = "edit-btn";
+    editBtn.textContent = "✏️";
+    editBtn.onclick = () => {
+      // load values into form for editing
+      amountInput.value = txn.amount;
+      descInput.value = txn.desc;
+      typeInput.value = txn.type;
+
+      // remove the old item so save will re-add it (update)
+      transactions.splice(index, 1);
+      saveTransactions();
+      renderTransactions();
+      updateReports();
+    };
+
+    const delBtn = document.createElement("button");
+    delBtn.className = "delete-btn";
+    delBtn.textContent = "❌";
+    delBtn.onclick = () => {
+      transactions.splice(index, 1);
+      saveTransactions();
+      renderTransactions();
+      updateReports();
+    };
+
+    btnGroup.appendChild(editBtn);
+    btnGroup.appendChild(delBtn);
+
+    // append to li and to list
+    li.appendChild(textSpan);
+    li.appendChild(btnGroup);
+    transactionList.appendChild(li);
+  });
+}
+
+// Add transaction
 form.addEventListener("submit", (e) => {
     e.preventDefault();
 
+    const amount = parseFloat(amountInput.value);
+    const desc = descInput.value;
+    const type = typeInput.value;
+
+    if (isNaN(amount) || amount <= 0 || desc.trim() === "") {
+        alert("Enter valid amount and description.");
+        return;
+    }
+
     const transaction = {
-        id: Date.now(),
-        amount: parseFloat(amountInput.value),
-        desc: descInput.value,
-        type: typeInput.value,
-        date: new Date().toISOString().split("T")[0] // store YYYY-MM-DD
+        amount,
+        desc,
+        type,
+        date: new Date().toISOString().split("T")[0] // YYYY-MM-DD
     };
 
     transactions.push(transaction);
-    localStorage.setItem("transactions", JSON.stringify(transactions));
-
-    form.reset();
+    saveTransactions();
     renderTransactions();
     updateReports();
+
+    form.reset();
 });
 
-// ====== Render Transactions ======
-function renderTransactions() {
-    transactionList.innerHTML = "";
-
-    transactions.forEach(tx => {
-        const li = document.createElement("li");
-        li.textContent = `${tx.date} - ${tx.desc}: ${tx.type === "expense" ? "-" : "+"}${tx.amount} PKR`;
-        li.className = tx.type;
-        transactionList.appendChild(li);
-    });
-}
-
-// ====== Reports ======
+// Calculate Reports
 function updateReports() {
     const now = new Date();
     const thisMonth = now.getMonth();
     const thisYear = now.getFullYear();
 
-    let monthlyTotal = 0;
-    let quarterlyTotal = 0;
-    let annualTotal = 0;
+    let monthlyTotal = 0, quarterlyTotal = 0, annualTotal = 0;
 
-    transactions.forEach(tx => {
-        const txDate = new Date(tx.date);
-        const txMonth = txDate.getMonth();
-        const txYear = txDate.getFullYear();
+    transactions.forEach(txn => {
+        const txnDate = new Date(txn.date);
+        const amt = txn.type === "income" ? txn.amount : -txn.amount;
 
-        let sign = tx.type === "expense" ? -1 : 1;
+        if (txnDate.getFullYear() === thisYear) {
+            annualTotal += amt;
 
-        // Monthly
-        if (txMonth === thisMonth && txYear === thisYear) {
-            monthlyTotal += sign * tx.amount;
-        }
-
-        // Quarterly (0–2, 3–5, 6–8, 9–11)
-        const currentQuarter = Math.floor(thisMonth / 3);
-        if (Math.floor(txMonth / 3) === currentQuarter && txYear === thisYear) {
-            quarterlyTotal += sign * tx.amount;
-        }
-
-        // Annual
-        if (txYear === thisYear) {
-            annualTotal += sign * tx.amount;
+            if (Math.floor(txnDate.getMonth() / 3) === Math.floor(thisMonth / 3)) {
+                quarterlyTotal += amt;
+            }
+            if (txnDate.getMonth() === thisMonth) {
+                monthlyTotal += amt;
+            }
         }
     });
 
@@ -89,70 +135,27 @@ function updateReports() {
     annualReport.textContent = `Annually: ${annualTotal} PKR`;
 }
 
-// ====== Date Wise Report ======
-[startDateInput, endDateInput].forEach(input => {
-    input.addEventListener("change", generateDateReport);
-});
+// Date wise report
+function updateDateWiseReport() {
+    const startDate = new Date(startDateInput.value);
+    const endDate = new Date(endDateInput.value);
 
-function generateDateReport() {
-    const start = new Date(startDateInput.value);
-    const end = new Date(endDateInput.value);
-
-    if (!start || !end) return;
+    if (!startDateInput.value || !endDateInput.value) return;
 
     let total = 0;
-    transactions.forEach(tx => {
-        const txDate = new Date(tx.date);
-        if (txDate >= start && txDate <= end) {
-            let sign = tx.type === "expense" ? -1 : 1;
-            total += sign * tx.amount;
+    transactions.forEach(txn => {
+        const txnDate = new Date(txn.date);
+        if (txnDate >= startDate && txnDate <= endDate) {
+            total += txn.type === "income" ? txn.amount : -txn.amount;
         }
     });
 
-    dateReport.textContent = `Net Income/Profit: ${total} PKR`;
+    reportOutput.textContent = `Net Income/Profit: ${total} PKR`;
 }
 
-// ====== Daily Reminder at 8 PM ======
-function setupDailyReminder() {
-    // Ask for notification permission
-    if ("Notification" in window) {
-        Notification.requestPermission();
-    }
+startDateInput.addEventListener("change", updateDateWiseReport);
+endDateInput.addEventListener("change", updateDateWiseReport);
 
-    setInterval(() => {
-        const now = new Date();
-        const hours = now.getHours();
-        const minutes = now.getMinutes();
-
-        // Trigger at exactly 8:00 PM
-        if (hours === 20 && minutes === 0) {
-            // Browser Notification
-            if ("Notification" in window && Notification.permission === "granted") {
-                new Notification("💰 Reminder", {
-                    body: "Don't forget to add today's expenses!",
-                    icon: "pic.jpg"
-                });
-            }
-
-            // Play sound
-            const audio = new Audio("reminder-tone.mp3");
-            audio.play().catch(() => {
-                console.log("Autoplay blocked — user must interact once.");
-            });
-
-            alert("🔔 Reminder: Please add today's expenses/Income!");
-        }
-    }, 60000); // check every minute
-}
-// Register Service Worker
-if ("serviceWorker" in navigator) {
-    navigator.serviceWorker.register("service-worker.js")
-    .then(() => console.log("✅ Service Worker registered"))
-    .catch(err => console.error("SW registration failed", err));
-}
-
-
-// ====== Init ======
+// ====== Initialize ======
 renderTransactions();
 updateReports();
-setupDailyReminder();

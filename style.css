@@ -1,57 +1,62 @@
-body{
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    margin-top: 0%;
-    padding:20px;
-    background-color: linear-gradient(135deg, #4facfe, #00f2fe);
-    color: #333;
-    display:flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 10px;
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+  padding: 10px;
+  background: linear-gradient(135deg, #4facfe, #00f2fe);
+  color: #333;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
-.card{
-    background-color: whitesmoke;
-    border-radius: 12px;
-    padding: 20px auto 0;
-    margin: 15px auto 0;
-    width: 100%;
-    max-width: 400px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);font-size: 15px;
-    animation: fadeIn 0.5s ease-in-out; transition: cubic-bezier();
+
+.card {
+  background-color: whitesmoke;
+  border-radius: 12px;
+  padding: 20px;
+  margin: 15px auto;
+  width: 100%;
+  max-width: 500px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  font-size: 15px;
+  animation: fadeIn 0.5s ease-in-out;
 }
-/* Animations */
+
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
 }
-h3{
-    margin-top: 10px;
-    font-size: larger;
-    text-align: center;
-    color: #444;
-    border-bottom: 2px solid #eee;
-    padding-bottom: 5px;
+
+h3 {
+  margin-top: 10px;
+  font-size: 1.2rem;
+  text-align: center;
+  color: #444;
+  border-bottom: 2px solid #eee;
+  padding-bottom: 5px;
 }
-/* Input fields*/
-input, select{
-    width: 90%;
-    padding: 5px;
-    margin: 10px 0 0 0 ;
-    border: 2px solid #4facfe;
-    border-radius: 18px;
-    font-size: 15px;
-    transition: cubic-bezier();
+
+/* Inputs */
+input, select {
+  width: 95%;
+  padding: 10px;
+  margin: 10px auto;
+  border: 2px solid #4facfe;
+  border-radius: 18px;
+  font-size: 15px;
+  display: block;
 }
-input:focus, select:focus{
-    border-color: #4facfe;
-    outline: none;
-    box-shadow: 0 0 5px rgba(79, 172, 254, 0.5);
+
+input:focus, select:focus {
+  border-color: #4facfe;
+  outline: none;
+  box-shadow: 0 0 6px rgba(79, 172, 254, 0.6);
 }
-/* Button */
-button {
-  width: 50%;
+
+/* Save Button */
+#transaction-form button {
+  width: 100%;
   padding: 12px;
-  margin: 10px 100px;
+  margin-top: 15px;
   border: none;
   border-radius: 15px;
   background: linear-gradient(135deg, #2d6bf0, #c429d8);
@@ -60,44 +65,112 @@ button {
   font-weight: bold;
   cursor: pointer;
   transition: transform 0.2s, background 0.3s;
-  justify-content: center;
 }
 
-button:hover {
+#transaction-form button:hover {
   transform: translateY(-2px);
   background: linear-gradient(135deg, #36d98c, #26e6c4);
 }
 
 /* Transaction List */
 .transaction ul {
+  
+  width: 100%;
   list-style: none;
   padding: 0;
+  margin: 0;
 }
 
 .transaction li {
-  padding: 12px;
-  margin: 8px 0;
-  border-radius: 8px;
+  background-color: #26e6c4;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  padding: 12px 15px;
+  margin-top: 10px;
+  margin-right: 0;
+  border-radius: 10px;
   font-size: 0.95rem;
   font-weight: 500;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  background: #fff;
+}
+.btn-group{
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  margin-right: 0;  
+  margin-left: auto;
+  flex: 0 0 auto;
+  gap: 8px; /*spacing between edit and delete button*/
+}
+/* circular edit and delete button*/
+.edit-btn, .delete-btn {
+  width: 36px;
+  height: 36px;
+  margin-right: 0;
+  border-radius: 50%;
+  padding: 0;
+  border: none;
+  display: inline-flex;
+  align-items: right;
+  justify-content: right;
+  cursor: pointer;
+  font-size: 16px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+  transition: transform .15s ease;
+}
+.edit-btn:hover, .delete-btn:hover { transform: scale(1.06); }
+
+.edit-btn {
+  background: linear-gradient(135deg, #fdd835, #f06292);
+  color: #fff;
 }
 
+.delete-btn {
+  background: linear-gradient(135deg, #e53935, #d81b60);
+  color: #fff;
+}
+/* Income vs Expense colors */
 .transaction li.expense {
-  background: #ffe0e0;
+  background: #ffe5e5;
   color: #d32f2f;
-  margin: 0 10px 0;
 }
 
 .transaction li.income {
-  background: #e0ffe4;
+  background: #e6ffea;
   color: #2e7d32;
-  margin: 0 10px 0;
 }
 
-/* Reports Section */
+/* Action buttons (edit/delete) */
+.transaction li button {
+  border: none;
+  border-radius: 50%;
+  padding: 8px;
+  margin-left: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s;
+}
+
+.transaction li button:hover {
+  transform: scale(1.1);
+}
+
+/* Edit (yellow/purple gradient) */
+.transaction li button:first-of-type {
+  background: linear-gradient(135deg, #fdd835, #f06292);
+  color: white;
+}
+
+/* Delete (red gradient) */
+.transaction li button:last-of-type {
+  background: linear-gradient(135deg, #e53935, #d81b60);
+  color: white;
+}
+
+/* Reports */
 .reports p {
   font-size: 16px;
   padding: 10px;
@@ -111,16 +184,21 @@ button:hover {
 #annual-report { background: #e1bee7; color: #6a1b9a; }
 #report { background: #c8e6c9; color: #1b5e20; font-weight: bold; }
 
-/* Mobile Responsiveness */
-@media (max-width: 450px) {
-  body {
-    padding: 5px;
-  }
+/* Mobile adjustments */
+@media (max-width: 480px) {
   .card {
     padding: 15px;
   }
-  h3 {
-    font-size: 1rem;
+  .transaction li {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .transaction li button {
+    margin-top: 5px;
+  }
+  .edit-btn, .delete-btn{ 
+    width: 34px;
+    height: 34px;
+    font-size: 14px;
   }
 }
-
